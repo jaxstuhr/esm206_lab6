@@ -53,3 +53,49 @@ What is the meaning of this p-value?
 If the samples were drawn from popus w the same rank (same popu), there's a 28% chance that we would have found samples at least this different by random chance... Thus we cannot reject the null that they are drawn from popus w same rank. rank ~ median
 
 Thus there is no significant difference in ranks/medians between groups 1 and 2
+
+## Linear Regressions
+
+Simple linear regression (single dependent variable, single indep variable)
+
+```{r}
+# Make exploratory plot of penguin body mass (y axis) vs flipper length (x axis)
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point() + 
+  geom_smooth(method = "lm") #don't add w/o being able to explain
+```
+
+Find a linear regression model using ordinary least squares describing the relationship between flipper length and body mass for these penguins
+
+3 pieces:
+ - What type of model?
+ - What is relationship to model? [ DV(IVs) ]
+ - What us the data that's used to create model?
+ 
+```{r}
+penguin_lm = lm(body_mass_g ~ flipper_length_mm, data = penguins)
+```
+
+What does it mean !?
+
+ body mass = 49.69 x flipper length - 5780.83
+ 
+ penguin_lm$coefficients returns [b,m]
+ 
+### broom package
+
+returns model outputs as tidy data frames
+
+```{r}
+penguin_lm_tidy = broom::tidy(penguin_lm)
+
+penguin_lm_tidy
+
+```
+
+```{r}
+extract_eq(model = penguin_lm, use_coefs = TRUE)
+```
+
+
