@@ -7,24 +7,49 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(palmerpenguins)
+library(broom)
+library(equatiomatic)
 ```
 
-## R Markdown
+## Example of a rank-based text
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+We'll make our own samples using pseudo-random generator
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+set.seed(1414)
+gp_1 = sample.int(20, size = 15, replace = TRUE)
 
-```{r cars}
-summary(cars)
+set.seed(1424)
+gp_2 = sample.int(30, size = 15, replace = TRUE)
 ```
 
-## Including Plots
+```{r}
+hist(gp_1)
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+hist(gp_2)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Try a t-test
+
+```{r}
+t.test(gp_1, gp_2)
+```
+
+What is the meaning of this p-value?
+
+If the samples were drawn from popus w the same mean (same popu), there's a 19.8% chance that we would have found samples at least this different by random chance... Thus we cannot reject the null that they are drawn from popus w same mean.
+
+Now let's compare to rank-based test
+
+## Mann Whitney U unpaired Rank-based test
+
+```{r}
+mwu = wilcox.test(gp_1, gp_2)
+```
+What is the meaning of this p-value?
+
+If the samples were drawn from popus w the same rank (same popu), there's a 28% chance that we would have found samples at least this different by random chance... Thus we cannot reject the null that they are drawn from popus w same rank. rank ~ median
+
+Thus there is no significant difference in ranks/medians between groups 1 and 2
